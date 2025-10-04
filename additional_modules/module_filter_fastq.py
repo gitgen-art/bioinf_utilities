@@ -16,3 +16,13 @@ def check_sequence_length(sequence: str, length_bounds = (0, 2**32)) -> bool:
         lower, upper =  length_bounds
         return lower <= seq_length <= upper
 
+def quality_check(quality: str, quality_threshold: int = 0) -> bool:
+    qual_length = len(quality)
+    n_bad_symbol = 0
+
+    for char in quality:
+        quality_scores = ord(char) - 33
+        if quality_scores < quality_threshold:
+            n_bad_symbol += 1
+
+    return n_bad_symbol < qual_length
