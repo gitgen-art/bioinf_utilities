@@ -26,3 +26,31 @@ def quality_check(quality: str, quality_threshold: int = 0) -> bool:
             n_bad_symbol += 1
 
     return n_bad_symbol < qual_length
+
+def input_check(seqs, gc_bounds=(0, 100), length_bounds=(0, 2**32), quality_threshold=0):
+    if not isinstance(seqs, dict):
+        print("Invalid input")
+        return False
+
+    for name, value in seqs.items():
+        if not isinstance(name, str) or not isinstance(value, tuple):
+            print("Invalid input")
+            return False
+        sequence, quality = value
+        if not isinstance(sequence, str) or not isinstance(quality, str):
+            print("Invalid input")
+            return False
+        if not is_nucleic_acid(sequence):
+            print("Invalid input")
+            return False
+
+    if not (0 <= gc_bounds <= 100):
+        print("Invalid input")
+        return False
+
+    if not (0 <= quality_threshold <= 41):
+        print("Invalid input")
+        return False
+
+    return True
+
