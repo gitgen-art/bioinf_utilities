@@ -92,8 +92,7 @@ def complement(sequence: str) -> str:
 
 def reverse_complement(sequence: str) -> str:
     """
-    Completes the complementary sequence Completes the complementary
-    sequence and then reverses the sequence.
+    Completes the complementary sequence and then reverses the sequence.
 
     Arguments:
     sequence: str
