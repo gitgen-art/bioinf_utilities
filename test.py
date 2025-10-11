@@ -8,10 +8,12 @@ from additional_modules.dna_rna_tools import (
     reverse_complement,
 )
 from additional_modules.module_filter_fastq import (
+    is_sequence_valid,
     calculate_gc_content,
-    check_sequence_length,
-    quality_check,
-    input_check,
+    is_gc_ok,
+    is_length_ok,
+    is_quality_ok,
+    input_check
 )
 
 EXAMPLE_FASTQ = {
@@ -83,4 +85,6 @@ example_rna = "AGUGAGACACCCCUGAACAUUCCUAGUAAGAC"
 result3 = run_dna_rna_tools(example_dna, "is_nucleic_acid")
 print(result3)
 result4 = run_dna_rna_tools(example_dna, example_rna, "reverse")
+print(result4)
+result4 = run_dna_rna_tools("", "reverse")
 print(result4)

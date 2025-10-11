@@ -1,3 +1,10 @@
+from additional_modules.dna_rna_tools import (is_nucleic_acid)
+
+def is_sequence_valid(sequence: str) -> bool:
+    """Check the validity of a sequence."""
+    return bool(sequence) and is_nucleic_acid(sequence)
+
+
 def calculate_gc_content(sequence: str) -> float:
     """
     Calculates the amount of G and C in a nucleic acid sequence as a percentage.
@@ -13,13 +20,16 @@ def calculate_gc_content(sequence: str) -> float:
     gc_count = sequence.count("G") + sequence.count("C")
     seq_length = len(sequence)
 
-    if seq_length == 0:
-        return "No sequence"
-
     return (gc_count / seq_length) * 100
 
 
-def check_sequence_length(sequence: str, length_bounds=(0, 2**32)) -> bool:
+def is_gc_ok(sequence: str, gc_min: float, gc_max: float) -> bool:
+    """Check the gc-content."""
+    gc_content = calculate_gc_content(sequence)
+    return gc_min <= gc_content <= gc_max
+
+
+def is_length_ok(sequence: str, length_bounds=(0, 2**32)) -> bool:
     """
     Checks whether the length of a sequence is within a given range.
 
@@ -35,7 +45,7 @@ def check_sequence_length(sequence: str, length_bounds=(0, 2**32)) -> bool:
     return lower <= seq_length <= upper
 
 
-def quality_check(quality: str, quality_threshold: int = 0) -> bool:
+def is_quality_ok(quality: str, quality_threshold: int = 0) -> bool:
     """
     Checks the quality of the sequence to meet the requirements.
 
@@ -46,15 +56,13 @@ def quality_check(quality: str, quality_threshold: int = 0) -> bool:
     Returns bool.
     """
 
-    qual_length = len(quality)
-    n_bad_symbol = 0
+    avg_quality = sum(ord(char) - 33 for char in quality) / len(quality)
+    return avg_quality >= quality_threshold
 
     for char in quality:
         quality_scores = ord(char) - 33
         if quality_scores < quality_threshold:
             n_bad_symbol += 1
-
-    return n_bad_symbol < qual_length
 
 
 def input_check(

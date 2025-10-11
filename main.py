@@ -2,11 +2,11 @@ from additional_modules.dna_rna_tools import (
     is_nucleic_acid, transcribe, reverse, complement, reverse_complement
 )
 from additional_modules.module_filter_fastq import (
-    calculate_gc_content, check_sequence_length, quality_check, input_check
+    is_sequence_valid, calculate_gc_content, is_gc_ok, is_length_ok, is_quality_ok, input_check
 )
 
 
-def run_dna_rna_tools(*args):
+def run_dna_rna_tools(*args: str) -> bool | str | list[str] | None:
     """
     Function for converting nucleic acid sequences. Available transformations:
     Nucleic acid affiliation testing - is_nucleic_acid(),transcription - transcribe(),
@@ -21,7 +21,8 @@ def run_dna_rna_tools(*args):
     """
 
     if not args:
-        return False
+        print("There is no sequence")
+        return None
     *sequences, procedure = args
 
     available = {
@@ -45,8 +46,8 @@ def run_dna_rna_tools(*args):
 
 
 def filter_fastq(
-    seqs, gc_bounds=(0, 100), length_bounds=(0, 2**32), quality_threshold: int = 0
-):
+    seqs: dict, gc_bounds: tuple | int  = (0, 100), length_bounds=(0, 2**32), quality_threshold: int = 0
+) -> dict:
     """
     Checks sequences from a dictionary for compliance with specified requirements.
 
@@ -77,20 +78,12 @@ def filter_fastq(
 
     for name, (sequence, quality) in seqs.items():
 
-        if not is_nucleic_acid(sequence):
-            continue
-
-        gc_content = calculate_gc_content(sequence)
-
-        if not (gc_min <= gc_content <= gc_max):
-            continue
-
-        if not check_sequence_length(sequence, (len_min, len_max)):
-            continue
-
-        if not quality_check(quality, quality_threshold):
-            continue
-
-        filtered_seqs[name] = (sequence, quality)
+        if (
+            is_sequence_valid(sequence) and
+            is_gc_ok(sequence, gc_min, gc_max) and
+            is_length_ok(sequence, (len_min, len_max)) and
+            is_quality_ok(quality, quality_threshold)
+        ):
+            filtered_seqs[name] = (sequence, quality)
 
     return filtered_seqs
