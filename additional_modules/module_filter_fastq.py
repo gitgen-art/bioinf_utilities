@@ -1,7 +1,7 @@
 from additional_modules.dna_rna_tools import (is_nucleic_acid)
 import os
 
-def read_fastq(file_path: str) -> dict[str, tuple[str, str]]:
+def read_fastq(input_fastq: str) -> dict[str, tuple[str, str]]:
     """
     Read FASTQ-file and converts it to a dictionary.
 
@@ -13,7 +13,7 @@ def read_fastq(file_path: str) -> dict[str, tuple[str, str]]:
     FileNotFoundError: if the file does not exist.
     """
 
-    if not os.path.exists(file_path):
+    if not os.path.exists(input_fastq):
         raise FileNotFoundError
 
     seqs = {}
@@ -31,6 +31,33 @@ def read_fastq(file_path: str) -> dict[str, tuple[str, str]]:
             seqs[name] = (sequence, quality)
 
         return seqs
+
+
+def write_fastq(filtered_seqs: dict[str, tuple[str, str]], output_fastq: str) -> None:
+    """
+    Write filtered sequences in new file 'output_fastq' in folder "filtered".
+
+    Arguments:
+    filtered_seqs: dict[str, tuple[str, str]]
+    output_path: str
+
+    Returns dictionary {header: (sequence, quality)}
+    Raises:
+    FileExistsError: if the file with the same name already exists
+    """
+    output_dir = "filtered"
+    output_path = os.path.join(output_dir, output_fastq)
+
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    if os.path.exists(output_path):
+        raise FileExistsError
+
+    with open(output_fastq, 'w') as output_file:
+        for name, (sequence, quality) in filtered_seqs.items():
+            plus_line = "+" + name[1:] if name.startswith('@') else "+" + name
+            output_file.write(f"{name}\n{sequence}\n{plus_line}\n{quality}\n")
 
 
 def is_sequence_valid(sequence: str) -> bool:
