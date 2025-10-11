@@ -1,4 +1,37 @@
 from additional_modules.dna_rna_tools import (is_nucleic_acid)
+import os
+
+def read_fastq(file_path: str) -> dict[str, tuple[str, str]]:
+    """
+    Read FASTQ-file and converts it to a dictionary.
+
+    Arguments:
+    file_path: str
+
+    Returns dictionary {header: (sequence, quality)}
+    Raises:
+    FileNotFoundError: if the file does not exist.
+    """
+
+    if not os.path.exists(file_path):
+        raise FileNotFoundError
+
+    seqs = {}
+
+    with open(input_fastq, 'r') as file:
+        while True:
+            name = file.readline().strip()
+            if not name:
+                break
+
+            sequence = file.readline().strip()
+            plus_line = file.readline().strip()
+            quality = file.readline().strip()
+
+            seqs[name] = (sequence, quality)
+
+        return seqs
+
 
 def is_sequence_valid(sequence: str) -> bool:
     """Check the validity of a sequence."""
