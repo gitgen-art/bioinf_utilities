@@ -41,7 +41,6 @@ def write_fastq(filtered_seqs: dict[str, tuple[str, str]], output_fastq: str) ->
     filtered_seqs: dict[str, tuple[str, str]]
     output_path: str
 
-    Returns dictionary {header: (sequence, quality)}
     Raises:
     FileExistsError: if the file with the same name already exists
     """
@@ -54,10 +53,30 @@ def write_fastq(filtered_seqs: dict[str, tuple[str, str]], output_fastq: str) ->
     if os.path.exists(output_path):
         raise FileExistsError
 
-    with open(output_fastq, 'w') as output_file:
+    with open(output_path, 'w') as output_file:
         for name, (sequence, quality) in filtered_seqs.items():
             plus_line = "+" + name[1:] if name.startswith('@') else "+" + name
             output_file.write(f"{name}\n{sequence}\n{plus_line}\n{quality}\n")
+
+def write_sequences(conv_sequences: str, output_fastq: str) -> None:
+    """
+    Write converted sequences in file 'output_fastq' in folder "filtered".
+
+    Arguments:
+    conv_sequences: str
+    output_path: str
+
+    Raises:
+    FileExistsError: if the file with the same name already exists
+    """
+    output_dir = "filtered"
+    output_path = os.path.join(output_dir, output_fastq)
+
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    with open(output_path, 'a') as output_file:
+        output_file.write(f"{conv_sequences}\n")
 
 
 def is_sequence_valid(sequence: str) -> bool:
