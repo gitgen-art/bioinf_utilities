@@ -2,9 +2,10 @@ from additional_modules.dna_rna_tools import (
     is_nucleic_acid, transcribe, reverse, complement, reverse_complement
 )
 from additional_modules.module_filter_fastq import (
-    is_sequence_valid, calculate_gc_content, is_gc_ok, is_length_ok, is_quality_ok, input_check
+    is_sequence_valid, calculate_gc_content, is_gc_ok, is_length_ok, is_quality_ok, input_check,
+    read_fastq, write_fastq, write_sequences
 )
-
+import os
 
 def run_dna_rna_tools(*args: str) -> bool | str | list[str] | None:
     """
@@ -46,20 +47,20 @@ def run_dna_rna_tools(*args: str) -> bool | str | list[str] | None:
 
 
 def filter_fastq(
-    seqs: dict, gc_bounds: tuple | int  = (0, 100), length_bounds=(0, 2**32), quality_threshold: int = 0
+    input_fastq: str, gc_bounds: tuple | int  = (0, 100), length_bounds=(0, 2**32), quality_threshold: int = 0
 ) -> dict:
     """
-    Checks sequences from a dictionary for compliance with specified requirements.
+    Converts FASTQ in a dictionary and checks sequences from a dictionary for compliance with specified requirements.
 
     Arguments:
-    seqs: dict
+    input_fastq: str
     gc_bounds=(0, 100)
     length_bounds=(0, 2**32)
     quality_threshold: int = 0
 
     Returns a dictionary with sequences that match the requirements.
     """
-
+    seqs = read_fastq(input_fastq)
     if not input_check(seqs, gc_bounds, length_bounds, quality_threshold):
         return None
 

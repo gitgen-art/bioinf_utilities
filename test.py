@@ -13,7 +13,9 @@ from additional_modules.module_filter_fastq import (
     is_gc_ok,
     is_length_ok,
     is_quality_ok,
-    input_check
+    input_check,
+    read_fastq,
+    write_fastq
 )
 
 EXAMPLE_FASTQ = {
