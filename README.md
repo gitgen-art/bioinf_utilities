@@ -1,5 +1,5 @@
 # bioinf_utilities
-Utilities for DNA/RNA sequence analysis and FASTQ.
+Utilities for DNA/RNA sequence analysis and FASTQ filtration.
 
 ## What is it?
 bioinf_utilities is a Python package that provides analysis of nucleic acid sequences.
@@ -7,39 +7,72 @@ bioinf_utilities is a Python package that provides analysis of nucleic acid sequ
 ## The structure
 bioinf_utilities/
 |- README.md
-|- main.py # The main module
-|- bio_files_processor.py # script for reading bioinf files
+|- Sequence_Transformator.py # OOP module for working with sequences
+|- FastQ_Filtrator.py # FASTQ File Filtering Tool
 |- test.py # File for quick start
-|- additional_modules/
-    |- dna_rna_tools.py # DNA/RNA tools
-    |- module_filter_fastq.py # Tool for filtrating FASTQ-sequences
+|- bio_files_processor.py  
 
-### The main module ('main.py')
-1. Contains functions 'run_dna_rna_tools()' and 'filter_fastq()'.
-The first one accept any number of positional arguments, where the last one is the procedure 
-from the file 'dna_rna_tools.py'.
-Arguments:
-    *args: seqs
-    *sequences, procedure = argsArguments:
+## Quick Start
+Run the program to see the result of both FASTQ filtering and sequence transformation:
+```bash
+python test.py
+```
+Use `nano test.py` to understand the usage examples.
 
-Example:
-run_dna_rna_tools(example_dna, example_rna, "reverse")
 
-2. The second one ('filter_fastq()') Converts FASTQ in a dictionary and checks sequences 
-from a dictionary for compliance with specified requirements, which you can tune.
+### Sequence_Transformator.py
+An object-oriented module for working with biological sequences.
+Class Hierarchy:
 
+BiologicalSequence (ABC)
+|- NucleicAcidSequence
+|   |-DNASequence
+|   |-RNASequence
+|
+|- AminoAcidSequence
+
+
+1. Class BiologicalSequence 
+Defines common interface for all biological sequences:
+__len__() - the length of a sequence
+__getitem__() - to get elements by index and make slices
+__str__() - beautiful output
+_check_alphabet() - abstract method for alphabet validation
+
+2. Сlass NucleicAcidSequence
+Сlass for nucleic acids with methods:
+complement() - get complementary sequence
+reverse() - get reverse sequence
+reverse_complement() - get reverse complementary sequence
+
+3. Сlass DNASequence
+DNA-specific class with method:
+transcribe() - transcribe DNA to RNA
+
+4. Сlass RNASequence
+RNA-specific class with methods, which inherits from NucleicAcidSequence
+
+5. Сlass AminoAcidSequence
+Protein sequence class with method:
+nucleotide_len() - length of template nucleotide sequence
+
+
+### Sequence_Transformator.py
+FASTQ file filtering tool using Biopython. Filters reads by GC content, sequence length, and quality.
+Requirements:
+```bash
+pip install biopython
+```
 Arguments:
     input_fastq: str
     gc_bounds = (the upper bound or tuple/list of 2 elements), default value = (0, 100); 
     length_bounds = (the upper bound or tuple/list of 2 elements), default value = (0, 2**32);
     quality_threshold: int = 0. 
 
-Note:'filter_fastq()' accesses the package 'module_filter_fastq.py'.
-
 Example:
-filtered_seqs = filter_fastq('./example_fastq.fastq')
+filtered_seqs = filter_fastq("fastq")
 
-### 'bio_files_processor.py'
+### bio_files_processor.py
 A module for processing biological files containing functions for working with FASTA format
 and analyzing BLAST results.
 Functions
@@ -74,38 +107,12 @@ Saves all protein names in a single column, sorted alphabetically
 Example:
 parse_blast_output("example_blast_results.txt", "top_blast_hits.txt")
 
-### File for quick start:
-You can run the program as "python test.py" to see the result, and then try the command "nano test.py" 
-for understandig of usage.
-
-### DNA/RNA tools ('dna_rna_tools.py')
-1. 'is_nucleic_acid()' - Checks that the input is the nucleic acid.transcription
-2. 'transcribe()' - Converts с.DNA into RNA
-3. 'reverse()' - Mirrors the sequence
-4. 'complement()' - Completes the complementary sequence
-5. 'reverse_complement()' - Completes the complementary sequence and then reverses the sequence
-
-Example of usage in the main function:
-run_dna_rna_tools(example_dna, example_rna, "reverse")
-
-### Tool for filtrating FASTQ-sequences ('module_filter_fastq.py')
-1. 'calculate_gc_content' - Calculates the amount of G and C in a nucleic acid sequence as a percentage
-2. 'is_gc_ok' - Checks whether the percentage of GC in sequence is within a given range
-3. 'is_length_ok' - Checks whether the length of a sequence is within a given range
-4. 'is_quality_ok' - Checks the quality of the sequence to meet the requirements
-5. 'input_check' - Checks that the input meets the requirements
-6. 'read_fastq' - Read FASTQ-file and converts it to a dictionary
-7. 'write_fastq' - Write filtered sequences in new file 'output_fastq' in folder "filtered".
-Makes a recording to an existing one
-8. 'write_sequences' - Write converted sequences in file 'output_fastq' in folder "filtered".
-Makes a recording to an existing one
-
-Example:
-filtered_seqs = filter_fastq('./example_fastq.fastq')
-write_fastq(filtered_seqs, 'remove_file')
-
 # Requirements:
 Python 3.6+
+
+```bash
+pip install biopython
+```
 
 #Contacts:
 https://github.com/gitgen-art
