@@ -1,15 +1,20 @@
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
 from FastQ_Filtrator import filter_fastq
 from Sequence_Transformator import (DNASequence, 
     RNASequence, AminoAcidSequence, NucleicAcidSequence)
 
+fastq_path = os.path.join(os.path.dirname(__file__), "test.fastq")
+
 result1 = filter_fastq(
-    "fastq", gc_bounds=80, length_bounds=500, quality_threshold=0
-)
+    fastq_path, gc_bounds=80, length_bounds=500, quality_threshold=0)
 print(result1)
 
 result2 = filter_fastq(
-    "fastq", gc_bounds=80, length_bounds=(1,5), quality_threshold=0
-)
+    fastq_path, gc_bounds=80, length_bounds=(1,5), quality_threshold=0)
 print(result2)
 
 

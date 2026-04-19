@@ -15,10 +15,16 @@ bioinf_utilities/
 ## Quick Start
 Run the program to see the result of both FASTQ filtering and sequence transformation:
 ```bash
-python test.py
+python tests/test.py
 ```
 Use `nano test.py` to understand the usage examples.
 
+# Quick tests
+To quickly test individual features of the FastQ_Filtrator.py function, use the following code:
+```bash
+python -m unittest discover tests -v
+```
+It creates a separate folder for test files and then deletes it. It allows you to check for the presence of the file to be analyzed, file reading and writing, testing individual filtering functions (GC content, length, quality) and their combined operation, filtering with default parameters, and the presence of informational messages (INFO) in the log file created when working with the file being analyzed.
 
 ### Sequence_Transformator.py
 An object-oriented module for working with biological sequences.
